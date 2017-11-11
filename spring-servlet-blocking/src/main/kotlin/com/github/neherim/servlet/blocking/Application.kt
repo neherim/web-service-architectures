@@ -10,8 +10,7 @@ import java.util.concurrent.Callable
 import java.util.concurrent.Executors
 
 /**
- * Пример сервера с архитектурой один поток на одно соединение.
- * В качестве http сервера - Tomcat
+ * Tomcat http server example. Thread per connection.
  */
 @SpringBootApplication
 class Application
@@ -26,15 +25,16 @@ class FeedController {
     private val restTemplate = RestTemplate()
     private val twitterHost = "http://localhost:9000"
     private val redditHost = "http://localhost:9001"
-    private val theradPool = Executors.newCachedThreadPool()
+    private val threadPool = Executors.newCachedThreadPool()
 
+    // Two parallel requests to external service
     @GetMapping("/feed")
     fun feed(): Feed {
-        val twitterResponseFuture = theradPool.submit(Callable {
+        val twitterResponseFuture = threadPool.submit(Callable {
             restTemplate.getForObject<Tweet>(twitterHost + "/tweet?user=Carl")
         })
 
-        val redditResponseFuture = theradPool.submit(Callable {
+        val redditResponseFuture = threadPool.submit(Callable {
             restTemplate.getForObject<Reddit>(redditHost + "/reddit?user=Carl")
         })
 
@@ -42,6 +42,13 @@ class FeedController {
         val redditPosts = redditResponseFuture.get()!!.text
 
         return Feed(twitterPosts.plus(redditPosts))
+    }
+
+    // One requests to external service
+    @GetMapping("/tweet")
+    fun tweet(): Feed {
+        val tweet = restTemplate.getForObject<Tweet>(twitterHost + "/tweet?user=Carl")!!
+        return Feed(tweet.text)
     }
 }
 

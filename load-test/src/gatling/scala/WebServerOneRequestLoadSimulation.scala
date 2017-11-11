@@ -3,7 +3,7 @@ import io.gatling.http.Predef._
 
 import scala.concurrent.duration._
 
-class WebServerFeedLoadSimulation extends Simulation {
+class WebServerOneRequestLoadSimulation extends Simulation {
   val httpConf = http
     .baseURL("http://localhost:8080")
     .acceptHeader("*/*")
@@ -13,11 +13,11 @@ class WebServerFeedLoadSimulation extends Simulation {
     .userAgentHeader("Mozilla/5.0 (Windows NT 5.1; rv:31.0) Gecko/20100101 Firefox/31.0")
 
 
-  val feed = scenario("Get feed load simulation 5000 users")
+  val feed = scenario("Get tweet load simulation 5000 users")
     .during(5 minutes) {
       exec(
-        http("Feed request")
-          .get("/feed")
+        http("Tweet request")
+          .get("/tweet")
           .check(status is 200))
     }
 

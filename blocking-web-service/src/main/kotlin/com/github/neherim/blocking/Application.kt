@@ -8,8 +8,7 @@ import java.net.Socket
 import java.util.concurrent.Executors
 
 /**
- * Пример сервера с архитектурой "один поток на соединение"
- * Количестов потоков ограничено, потоки распределяются из пула
+ * TCP server. Thread per connection, with connection queue and fixed threads number
  */
 fun main(args: Array<String>) {
     val threadPool = Executors.newFixedThreadPool(10)

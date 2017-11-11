@@ -14,8 +14,7 @@ import reactor.ipc.netty.http.server.HttpServer
 
 
 /**
- * Пример сервера Spring WebFlux в функциональном стиле без поднятия контекста, бинов и аннотаций.
- * В качестве web сервера - Netty
+ * Spring WebFlux http server in example. In functional style, without spring context and annotations.
  */
 class FeedHandler {
 
@@ -54,7 +53,6 @@ class FeedHandler {
                 .retrieve().bodyToMono<Tweet>()
 
         val feedMono = tweetMono.map { t -> Feed(t.text) }
-
 
         return ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
