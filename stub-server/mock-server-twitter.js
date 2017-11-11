@@ -8,11 +8,7 @@ http.createServer(function (req, res) {
     console.log(pathName);
     if (pathName == '/tweet') {
         setTimeout(function () {
-            res.end('{"user": "Carl", "text": "Hello! My first tweet!"}');
-        }, 1000);
-    } else if (pathName == '/reddit') {
-        setTimeout(function () {
-            res.end('{"user": "Carl", "title":"greet", "text": "Hello! My first reddit post!"}');
+            res.end('{"user": "Carl", "text": ["Hello! My first tweet!", "Second tweet!"]}');
         }, 1000);
     } else {
         res.end('No no no...');

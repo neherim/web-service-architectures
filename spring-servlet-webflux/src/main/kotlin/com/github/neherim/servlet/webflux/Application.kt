@@ -19,26 +19,46 @@ import reactor.ipc.netty.http.server.HttpServer
  */
 class FeedHandler {
 
-    data class Tweet(val user: String, val text: String)
-    data class Reddit(val user: String, val title: String, val text: String)
+    data class Tweet(val user: String, val text: List<String>)
+    data class Reddit(val user: String, val title: String, val text: List<String>)
     data class Feed(val posts: List<String>)
 
-    private val webClient: WebClient = WebClient.create("http://localhost:9000")
+    private val twitterClient: WebClient = WebClient.create("http://localhost:9000")
+    private val redditClient: WebClient = WebClient.create("http://localhost:9001")
 
+    // Two parallel requests to external service
     fun feed(req: ServerRequest): Mono<ServerResponse> {
-        val tweetMono = webClient.get().uri("/tweet?user=Carl")
+        val tweetMono = twitterClient.get().uri("/tweet?user=John")
                 .retrieve().bodyToMono<Tweet>()
 
-        val redditMono = webClient.get().uri("/reddit?user=Carl")
+        val redditMono = redditClient.get().uri("/reddit?user=John")
                 .retrieve().bodyToMono<Reddit>()
 
-        val result: Mono<Feed> = tweetMono.zipWith(redditMono, { r, t ->
-            Feed(listOf(t.text, r.text))
-        })
+
+        val tweetTextFlux = tweetMono.flatMapIterable { it.text }
+        val redditTextFlux = redditMono.flatMapIterable { it.text }
+
+
+        val feedMono = tweetTextFlux.mergeWith(redditTextFlux)
+                .collectList()
+                .map { textList -> Feed(textList) }
 
         return ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(result, Feed::class.java)
+                .body(feedMono, Feed::class.java)
+    }
+
+    // One requests to external service
+    fun tweet(req: ServerRequest): Mono<ServerResponse> {
+        val tweetMono = twitterClient.get().uri("/tweet?user=John")
+                .retrieve().bodyToMono<Tweet>()
+
+        val feedMono = tweetMono.map { t -> Feed(t.text) }
+
+
+        return ServerResponse.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(feedMono, Feed::class.java)
     }
 }
 
@@ -51,7 +71,8 @@ fun main(args: Array<String>) {
 }
 
 fun apis(feedHandler: FeedHandler) = router {
-    (accept(APPLICATION_JSON)).nest {
+    accept(APPLICATION_JSON).nest {
         GET("/feed", feedHandler::feed)
+        GET("/tweet", feedHandler::tweet)
     }
 }

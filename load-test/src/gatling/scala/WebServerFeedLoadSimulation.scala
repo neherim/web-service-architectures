@@ -14,7 +14,7 @@ class WebServerFeedLoadSimulation extends Simulation {
 
 
   val feed = scenario("Get feed load simulation 5000 users")
-    .during(20 minutes) {
+    .during(5 minutes) {
       exec(
         http("Feed request")
           .get("/feed")
@@ -22,6 +22,6 @@ class WebServerFeedLoadSimulation extends Simulation {
     }
 
   setUp(
-    feed.inject(rampUsers(5000) over (15 minutes))
+    feed.inject(rampUsers(1000) over (3 minutes))
   ).protocols(httpConf)
 }
