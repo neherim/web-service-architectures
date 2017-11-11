@@ -24,6 +24,9 @@ apply plugin: 'kotlin-spring'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+apply plugin: 'application'
+
+mainClassName = "com.github.neherim.webflux.ApplicationKt"
 
 repositories {
     mavenCentral()

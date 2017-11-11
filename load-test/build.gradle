@@ -18,6 +18,10 @@ apply plugin: "com.github.lkishalmi.gatling"
 
 sourceCompatibility = 1.8
 
+gatling {
+    logLevel = 'INFO'
+}
+
 repositories {
     mavenCentral()
 }

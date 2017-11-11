@@ -1,5 +1,6 @@
 package com.github.neherim.servlet.blocking
 
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.web.bind.annotation.GetMapping
@@ -15,27 +16,29 @@ import java.util.concurrent.Executors
 @SpringBootApplication
 class Application
 
-@RestController
-class FeedController {
+data class Tweet(val user: String, val text: List<String>)
+data class Reddit(val user: String, val title: String, val text: List<String>)
+data class Feed(val posts: List<String>)
 
-    data class Tweet(val user: String, val text: List<String>)
-    data class Reddit(val user: String, val title: String, val text: List<String>)
-    data class Feed(val posts: List<String>)
+@RestController
+class FeedController(
+        @Value("\${service.twitter.url}")
+        private val twitterHost: String,
+        @Value("\${service.reddit.url}")
+        private val redditHost: String) {
 
     private val restTemplate = RestTemplate()
-    private val twitterHost = "http://localhost:9000"
-    private val redditHost = "http://localhost:9001"
     private val threadPool = Executors.newCachedThreadPool()
 
     // Two parallel requests to external service
     @GetMapping("/feed")
     fun feed(): Feed {
         val twitterResponseFuture = threadPool.submit(Callable {
-            restTemplate.getForObject<Tweet>(twitterHost + "/tweet?user=Carl")
+            restTemplate.getForObject<Tweet>(twitterHost + "/tweet")
         })
 
         val redditResponseFuture = threadPool.submit(Callable {
-            restTemplate.getForObject<Reddit>(redditHost + "/reddit?user=Carl")
+            restTemplate.getForObject<Reddit>(redditHost + "/reddit")
         })
 
         val twitterPosts = twitterResponseFuture.get()!!.text
@@ -47,7 +50,7 @@ class FeedController {
     // One requests to external service
     @GetMapping("/tweet")
     fun tweet(): Feed {
-        val tweet = restTemplate.getForObject<Tweet>(twitterHost + "/tweet?user=Carl")!!
+        val tweet = restTemplate.getForObject<Tweet>(twitterHost + "/tweet")!!
         return Feed(tweet.text)
     }
 }
