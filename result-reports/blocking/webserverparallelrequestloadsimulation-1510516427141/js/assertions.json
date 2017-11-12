@@ -1,0 +1,10 @@
+{
+  "simulation": "WebServerParallelRequestLoadSimulation",
+  "simulationId": "webserverparallelrequestloadsimulation",
+  "start": 1510516427141,
+  "description": "",
+  "scenarios": ["Get feed load simulation 1000 users"],
+  "assertions": [
+
+  ]
+}

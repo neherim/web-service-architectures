@@ -1,0 +1,10 @@
+{
+  "simulation": "WebServerOneRequestLoadSimulation",
+  "simulationId": "webserveronerequestloadsimulation",
+  "start": 1510517516121,
+  "description": "",
+  "scenarios": ["Get tweet load simulation 1000 users"],
+  "assertions": [
+
+  ]
+}

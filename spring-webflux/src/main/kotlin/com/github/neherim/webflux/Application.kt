@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono
 
 
 /**
- * Spring WebFlux http server in example. In functional style, without spring context and annotations.
+ * Spring WebFlux http server example.
  */
 @RestController
 class FeedHandler(@Value("\${service.twitter.url}")
