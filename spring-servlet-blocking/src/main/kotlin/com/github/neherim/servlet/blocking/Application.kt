@@ -28,7 +28,7 @@ class FeedController(
         private val redditUrl: String) {
 
     private val restTemplate = RestTemplate()
-    private val threadPool = Executors.newCachedThreadPool()
+    private val threadPool = Executors.newFixedThreadPool(500)
 
     // Two parallel requests to external service
     @GetMapping("/feed")
