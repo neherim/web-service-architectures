@@ -23,9 +23,9 @@ data class Feed(val posts: List<String>)
 @RestController
 class FeedController(
         @Value("\${service.twitter.url}")
-        private val twitterHost: String,
+        private val twitterUrl: String,
         @Value("\${service.reddit.url}")
-        private val redditHost: String) {
+        private val redditUrl: String) {
 
     private val restTemplate = RestTemplate()
     private val threadPool = Executors.newCachedThreadPool()
@@ -34,11 +34,11 @@ class FeedController(
     @GetMapping("/feed")
     fun feed(): Feed {
         val twitterResponseFuture = threadPool.submit(Callable {
-            restTemplate.getForObject<Tweet>(twitterHost + "/tweet")
+            restTemplate.getForObject<Tweet>(twitterUrl + "/tweet")
         })
 
         val redditResponseFuture = threadPool.submit(Callable {
-            restTemplate.getForObject<Reddit>(redditHost + "/reddit")
+            restTemplate.getForObject<Reddit>(redditUrl + "/reddit")
         })
 
         val twitterPosts = twitterResponseFuture.get()!!.text
@@ -50,7 +50,7 @@ class FeedController(
     // One requests to external service
     @GetMapping("/tweet")
     fun tweet(): Feed {
-        val tweet = restTemplate.getForObject<Tweet>(twitterHost + "/tweet")!!
+        val tweet = restTemplate.getForObject<Tweet>(twitterUrl + "/tweet")!!
         return Feed(tweet.text)
     }
 }

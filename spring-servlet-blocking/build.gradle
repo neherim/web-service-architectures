@@ -1,5 +1,5 @@
 group 'com.github.neherim'
-version '1.0-SNAPSHOT'
+version '1.0'
 
 
 buildscript {
@@ -21,7 +21,6 @@ buildscript {
 
 apply plugin: 'kotlin'
 apply plugin: 'kotlin-spring'
-apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 

@@ -7,14 +7,10 @@ class WebServerParallelRequestLoadSimulation extends Simulation {
   val httpConf = http
     .baseURL("http://localhost:8080")
     .acceptHeader("*/*")
-    .doNotTrackHeader("1")
-    .acceptLanguageHeader("en-US,en;q=0.5")
-    .acceptEncodingHeader("gzip, deflate")
-    .userAgentHeader("Mozilla/5.0 (Windows NT 5.1; rv:31.0) Gecko/20100101 Firefox/31.0")
+    .userAgentHeader("Gatling")
 
-
-  val feed = scenario("Get feed load simulation 5000 users")
-    .during(5 minutes) {
+  val feed = scenario("Get feed load simulation 1000 users")
+    .during(10 minutes) {
       exec(
         http("Feed request")
           .get("/feed")
@@ -22,6 +18,6 @@ class WebServerParallelRequestLoadSimulation extends Simulation {
     }
 
   setUp(
-    feed.inject(rampUsers(1000) over (3 minutes))
+    feed.inject(rampUsers(1000) over (5 minutes))
   ).protocols(httpConf)
 }

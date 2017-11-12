@@ -1,6 +1,7 @@
 /.idea/
 /.gradle/
 /build/
+/dist/
 /*/out/
 /*/build/
 *.log
