@@ -4,7 +4,7 @@ version '1.0'
 
 buildscript {
     ext {
-        kotlinVersion = '1.1.51'
+        kotlinVersion = '1.1.60'
         springBootVersion = '2.0.0.M6'
     }
     repositories {
@@ -41,8 +41,6 @@ repositories {
 
 dependencies {
     compile('org.springframework.boot:spring-boot-starter-webflux')
-    compile 'io.netty:netty-transport-native-epoll:4.1.16.Final:linux-x86_64'
-
     compile("org.jetbrains.kotlin:kotlin-stdlib-jre8")
     compile("org.jetbrains.kotlin:kotlin-reflect")
     compile("com.fasterxml.jackson.module:jackson-module-kotlin:2.9.0")

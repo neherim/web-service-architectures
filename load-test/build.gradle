@@ -14,18 +14,14 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'scala'
-apply plugin: "com.github.lkishalmi.gatling"
+apply plugin: 'com.github.lkishalmi.gatling'
 
 sourceCompatibility = 1.8
-
-gatling {
-    logLevel = 'INFO'
-}
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile "org.scala-lang:scala-library:2.12.3"
 }
