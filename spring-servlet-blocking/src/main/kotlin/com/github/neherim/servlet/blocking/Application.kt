@@ -21,11 +21,10 @@ data class Reddit(val user: String, val title: String, val text: List<String>)
 data class Feed(val posts: List<String>)
 
 @RestController
-class FeedController(
-        @Value("\${service.twitter.url}")
-        private val twitterUrl: String,
-        @Value("\${service.reddit.url}")
-        private val redditUrl: String) {
+class FeedController(@Value("\${service.twitter.url}")
+                     private val twitterUrl: String,
+                     @Value("\${service.reddit.url}")
+                     private val redditUrl: String) {
 
     private val restTemplate = RestTemplate()
     private val threadPool = Executors.newFixedThreadPool(500)
@@ -34,11 +33,11 @@ class FeedController(
     @GetMapping("/feed")
     fun feed(): Feed {
         val twitterResponseFuture = threadPool.submit(Callable {
-            restTemplate.getForObject<Tweet>(twitterUrl + "/tweet")
+            restTemplate.getForObject<Tweet>(twitterUrl)
         })
 
         val redditResponseFuture = threadPool.submit(Callable {
-            restTemplate.getForObject<Reddit>(redditUrl + "/reddit")
+            restTemplate.getForObject<Reddit>(redditUrl)
         })
 
         val twitterPosts = twitterResponseFuture.get()!!.text

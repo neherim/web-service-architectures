@@ -1,3 +1,3 @@
 service:
-  twitter.url: http://localhost:9000
-  reddit.url: http://localhost:9001
+  twitter.url: http://localhost:9000/tweet
+  reddit.url: http://localhost:9001/reddit

@@ -30,8 +30,8 @@ class FeedHandler(@Value("\${service.twitter.url}")
     private val twitterClient: WebClient = WebClient.create(twitterUrl)
     private val redditClient: WebClient = WebClient.create(redditUrl)
 
-    fun getTweet() = twitterClient.get().uri("/tweet").retrieve().bodyToMono<Tweet>()
-    fun getReddit() = redditClient.get().uri("/reddit").retrieve().bodyToMono<Reddit>()
+    fun getTweet() = twitterClient.get().retrieve().bodyToMono<Tweet>()
+    fun getReddit() = redditClient.get().retrieve().bodyToMono<Reddit>()
 
     // Two parallel requests to external service
     @GetMapping(value = "/feed", produces = arrayOf(APPLICATION_JSON_VALUE))
@@ -46,9 +46,7 @@ class FeedHandler(@Value("\${service.twitter.url}")
 
     // One requests to external service
     @GetMapping(value = "/tweet", produces = arrayOf(APPLICATION_JSON_VALUE))
-    fun tweet(): Mono<Feed> {
-        return getTweet().map { Feed(it.text) }
-    }
+    fun tweet(): Mono<Feed> = getTweet().map { Feed(it.text) }
 }
 
 fun main(args: Array<String>) {

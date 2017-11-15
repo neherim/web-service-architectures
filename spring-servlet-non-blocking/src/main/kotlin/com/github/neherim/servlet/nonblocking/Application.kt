@@ -24,9 +24,8 @@ data class Tweet(val user: String, val text: List<String>)
 data class Feed(val posts: List<String>)
 
 @RestController
-class FeedController(
-        @Value("\${service.twitter.url}")
-        private val twitterUrl: String) {
+class FeedController(@Value("\${service.twitter.url}")
+                     private val twitterUrl: String) {
 
     val restTemplate = AsyncRestTemplate()
 
@@ -34,7 +33,7 @@ class FeedController(
     @GetMapping("/tweet")
     fun tweet(): DeferredResult<Feed> {
         val dr = DeferredResult<Feed>()
-        val future = restTemplate.exchange(twitterUrl + "/tweet", HttpMethod.GET, entity(), Tweet::class.java)
+        val future = restTemplate.exchange(twitterUrl, HttpMethod.GET, entity(), Tweet::class.java)
         future.addCallback(
                 { success ->
                     val feed = Feed((success.body.text))

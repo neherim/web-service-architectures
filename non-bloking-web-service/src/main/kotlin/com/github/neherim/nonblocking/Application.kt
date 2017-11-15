@@ -11,32 +11,31 @@ import java.nio.channels.SocketChannel
  * Simple and incorrect nio server implementation
  */
 fun main(args: Array<String>) {
+    val buffer = ByteBuffer.allocate(256)
     val selector = Selector.open()
     val serverSocket = ServerSocketChannel.open()
     serverSocket.bind(InetSocketAddress(8080))
     serverSocket.configureBlocking(false)
     serverSocket.register(selector, SelectionKey.OP_ACCEPT)
-    val buffer = ByteBuffer.allocate(256)
 
     while (true) {
         selector.select()
-        val keys = selector.selectedKeys().iterator()
-        while (keys.hasNext()) {
-            val key = keys.next()
-            keys.remove()
-            if (key.isValid) {
-                if (key.isAcceptable) {
-                    processAcceptEvent(selector, serverSocket)
-                }
-                if (key.isReadable) {
-                    processReadEvent(buffer, key)
-                }
+        selector.selectedKeys().forEach {
+            when {
+                it.isAcceptable -> processAcceptEvent(selector, serverSocket)
+                it.isReadable -> processReadEvent(buffer, it)
+                it.isWritable -> processWriteEvent(buffer, it)
             }
         }
+        selector.selectedKeys().clear()
     }
 }
 
-private fun processReadEvent(buffer: ByteBuffer, key: SelectionKey) {
+fun processWriteEvent(buffer: ByteBuffer, it: SelectionKey) {
+    TODO("not implemented")
+}
+
+fun processReadEvent(buffer: ByteBuffer, key: SelectionKey) {
     buffer.clear()
     val socketChannel = key.channel() as SocketChannel
     val bytesRead = socketChannel.read(buffer)
