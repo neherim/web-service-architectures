@@ -14,15 +14,18 @@ import reactor.core.publisher.Mono
 /**
  * Spring WebFlux http server example.
  */
+@SpringBootApplication
+class Application
+
+data class Tweet(val user: String, val text: List<String>)
+data class Reddit(val user: String, val title: String, val text: List<String>)
+data class Feed(val posts: List<String>)
+
 @RestController
 class FeedHandler(@Value("\${service.twitter.url}")
                   private val twitterUrl: String,
                   @Value("\${service.reddit.url}")
                   private val redditUrl: String) {
-
-    data class Tweet(val user: String, val text: List<String>)
-    data class Reddit(val user: String, val title: String, val text: List<String>)
-    data class Feed(val posts: List<String>)
 
     private val twitterClient: WebClient = WebClient.create(twitterUrl)
     private val redditClient: WebClient = WebClient.create(redditUrl)
@@ -47,9 +50,6 @@ class FeedHandler(@Value("\${service.twitter.url}")
         return getTweet().map { Feed(it.text) }
     }
 }
-
-@SpringBootApplication
-class Application
 
 fun main(args: Array<String>) {
     runApplication<Application>(*args)

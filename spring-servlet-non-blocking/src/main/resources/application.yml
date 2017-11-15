@@ -1,0 +1,6 @@
+server:
+  tomcat:
+    max-threads: 500
+service:
+  twitter.url: http://localhost:9000
+  reddit.url: http://localhost:9001

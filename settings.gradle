@@ -1,6 +1,7 @@
 rootProject.name = 'web-service-architectures'
 include 'blocking-web-service'
 include 'spring-servlet-blocking'
+include 'spring-servlet-non-blocking'
 include 'spring-webflux'
 include 'load-test'
 include 'non-bloking-web-service'
