@@ -49,7 +49,7 @@ class FeedController(@Value("\${service.twitter.url}")
     // One requests to external service
     @GetMapping("/tweet")
     fun tweet(): Feed {
-        val tweet = restTemplate.getForObject<Tweet>(twitterUrl + "/tweet")!!
+        val tweet = restTemplate.getForObject<Tweet>(twitterUrl)!!
         return Feed(tweet.text)
     }
 }
