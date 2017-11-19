@@ -14,7 +14,7 @@ Examples from presentation
 
 Load Testing
 ---
-[Load Testing results](result-reports)
+[Results](result-reports)
 
 #### Load Testing Environment
 
